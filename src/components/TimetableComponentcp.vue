@@ -16,7 +16,7 @@
             </v-flex>
             <v-flex xs12 v-for="lesson in availableLessons" :key="lesson.id">
               <v-card draggable="true" @dragstart="startDraggingAvailableLesson($event,lesson)">
-                <v-card-text class="px-0" @dragover="allowDrop" @drop="addLessonAvailable">{{lesson.name}}</v-card-text>
+                <v-card-text class="px-0">{{lesson.name}}</v-card-text>
               </v-card>
             </v-flex>
           </v-layout>
@@ -42,7 +42,7 @@
                 </v-card>
               </v-flex>
               <v-flex xs2 v-for="day in days" :key="day.id + '' + timeslot.id ">
-                <v-card draggable="true" @mousedown="getCurrentLesson(day, timeslot)">
+                <v-card>
                   <v-card-text class="px-0" @drop="dropLesson($event, day, timeslot)" @dragover="allowDrop" v-html="content(day, timeslot )"></v-card-text>
                 </v-card>
               </v-flex>
@@ -81,6 +81,7 @@
     /* Required to make elements draggable in old WebKit */
     -webkit-user-drag: element;
     cursor: move;
+    cursor: move;
   }
 </style>
 
@@ -88,7 +89,6 @@
   export default {
     data () {
       return {
-        currentLesson: '',
         timetable: [],
         newLessonName: '',
         newLessonDay: 0,
@@ -254,32 +254,6 @@
 //        console.log(e)
         e.dataTransfer.effectAllowed = 'move'
         e.dataTransfer.setData('lesson', JSON.stringify(lesson))
-      },
-      getCurrentLesson (day, timeslot) {
-        const lesson = this.lessons.find(function (lesson) {
-          return lesson.day === day.id && lesson.timeslot_id === timeslot.id
-        })
-        if (lesson !== undefined) {
-          this.currentLesson = lesson
-          this.currentLesson.currentTimeslot = timeslot
-          this.currentLesson.currentDay = day
-        }
-      },
-      addLessonAvailable () {
-        if (this.currentLesson !== undefined) {
-          this.availableLessons.push(this.currentLesson)
-          this.setDefaultValuesToTimeslot()
-        }
-      },
-      setDefaultValuesToTimeslot () {
-        var day = this.currentLesson.currentDay
-        var timeslot = this.currentLesson.currentTimeslot
-        const lesson = this.lessons.find(function (lesson) {
-          return lesson.day === day.id && lesson.timeslot_id === timeslot.id
-        })
-        lesson.day = ''
-        lesson.timeslot = ''
-        this.currentLesson = ''
       }
     }
   }
