@@ -50,7 +50,8 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../docs'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/timetable_drag_and_drop',
+    // assetsPublicPath: '/timetable_drag_and_drop',
+    assetsPublicPath: '/timetablevuetify',
 
     /**
      * Source Maps
