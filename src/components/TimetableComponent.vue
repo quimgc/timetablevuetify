@@ -92,6 +92,8 @@
         timetable: [],
         newLessonName: '',
         newLessonDay: 0,
+        tempLesson: '',
+        newLessonID: -1,
         newLessonTimeslot: 0,
         days: [
           {
@@ -199,6 +201,7 @@
     methods: {
       addLesson () {
         const newLesson = {
+          'id': this.newLessonID,
           'name': this.newLessonName,
           'day': parseInt(this.newLessonDay),
           'timeslot_id': parseInt(this.newLessonTimeslot)
@@ -222,31 +225,62 @@
         e.preventDefault()
       },
       dropLesson (e, day, timeslot) {
-//        console.log(e)
-        const lesson = JSON.parse(e.dataTransfer.getData('lesson'))
-//        console.log('Lesson is:', lesson)
-//        console.log('Lesson name:', lesson.name)
-//        console.log('Lesson id:', lesson.id)
-//        console.log('Lesson By id:', this.getLessonById(lesson.id))
-        // Remove lesson from available availableLessons:
-        this.availableLessons.splice(this.availableLessons.indexOf(this.getLessonById(lesson.id)), 1)
-//        console.log('DAY:')
-//        console.log(day)
-//        console.log(day.id)
-//        console.log('TIMESLOT:')
-//        console.log(timeslot)
-//        console.log(timeslot.id)
-        this.newLessonName = lesson.name
-        this.newLessonDay = day.id
-        this.newLessonTimeslot = timeslot.id
-        this.addLesson()
+        if (this.checkIfSlotIsEmpty(day, timeslot)) {
+          if (this.currentLesson === '') {
+            const lesson = JSON.parse(e.dataTransfer.getData('lesson'))
+            this.availableLessons.splice(this.availableLessons.indexOf(this.getLessonAvailableById(lesson.id)), 1)
+            this.newLessonName = lesson.name
+            this.newLessonID = lesson.id
+            this.newLessonDay = day.id
+            this.newLessonTimeslot = timeslot.id
+            this.addLesson()
+          } else {
+            console.log(this.currentLesson)
+            var currentId = this.currentLesson.id
+            this.lessons.find(function (lesson) {
+              if (lesson.id === currentId) {
+                lesson.day = day.id
+                lesson.timeslot_id = timeslot.id
+              }
+            })
+          }
+        } else {
+          console.log(this.tempLesson)
+          if (this.tempLesson !== '') {
+            console.log('available')
+            console.log(this.tempLesson)
+            console.log(this.currentLesson)
+            this.tempLesson = ''
+          } else {
+            console.log('entre lliçons')
+          }
+          // todo: INTERCANVIAR LLIÇONS
+        }
+        this.currentLesson = ''
       },
-      getLessonById (id) {
+      checkIfSlotIsEmpty (day = '', timeslot = '') {
+        const emptySlot = this.lessons.find(function (lesson) {
+          return lesson.day === day.id && lesson.timeslot_id === timeslot.id
+        })
+        if (emptySlot === undefined) {
+          return true
+        } else {
+          this.currentLesson = emptySlot
+          return false
+        }
+      },
+      getLessonAvailableById (id) {
         return this.availableLessons.find(function (lesson) {
           return lesson.id === id
         })
       },
+      getLessonById (id) {
+        return this.lessons.find(function (lesson) {
+          return lesson.id === id
+        })
+      },
       startDraggingAvailableLesson (e, lesson) {
+        this.tempLesson = lesson
 //        console.log('Starting drag lesson:')
 //        console.log(lesson.name)
 //        console.log(lesson)
