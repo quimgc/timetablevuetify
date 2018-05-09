@@ -206,8 +206,8 @@
           'day': parseInt(this.newLessonDay),
           'timeslot_id': parseInt(this.newLessonTimeslot)
         }
-//        console.log(newLesson)
         this.lessons.push(newLesson)
+//        console.log(newLesson)
       },
       content (day, timeslot) {
 //        console.log('Day:')
@@ -236,7 +236,6 @@
             this.addLesson()
             this.availableLesson = ''
           } else {
-            console.log(this.currentLesson)
             var currentId = this.currentLesson.id
             this.lessons.find(function (lesson) {
               if (lesson.id === currentId) {
@@ -247,16 +246,11 @@
           }
         } else {
           const tempCurrentLesson = Object.assign({}, this.currentLesson)
-//          const tempavAilableLesson = Object.assign({}, this.availableLesson)
-          tempCurrentLesson.name = 'currentLesson'
-          this.currentLesson.name = 'aa'
-          tempCurrentLesson.day = this.availableLesson.day
-          tempCurrentLesson.timeslot_id = this.availableLesson.timeslot_id
-          tempCurrentLesson.id = this.availableLesson.id
-//          tempavAilableLesson.name = 'currentAvaialble'
-//          tempavAilableLesson.day = this.currentLesson.day
-//          tempavAilableLesson.timeslot_id = this.currentLesson.timeslot_id
-//          tempavAilableLesson.id = this.currentLesson.id
+          const tempAvailableLesson = Object.assign({}, this.availableLesson)
+          this.currentLesson.name = tempAvailableLesson.name
+          this.currentLesson.id = tempAvailableLesson.id
+          this.availableLesson.name = tempCurrentLesson.name
+          this.availableLesson.id = tempCurrentLesson.id
         }
         this.availableLesson = ''
         this.currentLesson = ''
