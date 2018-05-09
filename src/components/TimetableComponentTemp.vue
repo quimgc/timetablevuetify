@@ -226,7 +226,7 @@
       },
       dropLesson (e, day, timeslot) {
         if (this.checkIfSlotIsEmpty(day, timeslot)) {
-          if (this.currentLesson === '' && this.availableLesson !== '') {
+          if (this.currentLesson === '') {
             const lesson = JSON.parse(e.dataTransfer.getData('lesson'))
             this.availableLessons.splice(this.availableLessons.indexOf(this.getLessonAvailableById(lesson.id)), 1)
             this.newLessonName = lesson.name
@@ -234,7 +234,6 @@
             this.newLessonDay = day.id
             this.newLessonTimeslot = timeslot.id
             this.addLesson()
-            this.availableLesson = ''
           } else {
             console.log(this.currentLesson)
             var currentId = this.currentLesson.id
@@ -246,19 +245,17 @@
             })
           }
         } else {
-          const tempCurrentLesson = Object.assign({}, this.currentLesson)
-//          const tempavAilableLesson = Object.assign({}, this.availableLesson)
-          tempCurrentLesson.name = 'currentLesson'
-          this.currentLesson.name = 'aa'
-          tempCurrentLesson.day = this.availableLesson.day
-          tempCurrentLesson.timeslot_id = this.availableLesson.timeslot_id
-          tempCurrentLesson.id = this.availableLesson.id
-//          tempavAilableLesson.name = 'currentAvaialble'
-//          tempavAilableLesson.day = this.currentLesson.day
-//          tempavAilableLesson.timeslot_id = this.currentLesson.timeslot_id
-//          tempavAilableLesson.id = this.currentLesson.id
+          console.log(this.tempLesson)
+          if (this.tempLesson !== '') {
+            console.log('available')
+            console.log(this.tempLesson)
+            console.log(this.currentLesson)
+            this.tempLesson = ''
+          } else {
+            console.log('entre lliçons')
+          }
+          // todo: INTERCANVIAR LLIÇONS
         }
-        this.availableLesson = ''
         this.currentLesson = ''
       },
       checkIfSlotIsEmpty (day = '', timeslot = '') {
@@ -268,12 +265,7 @@
         if (emptySlot === undefined) {
           return true
         } else {
-          if (this.currentLesson === '') {
-            this.currentLesson = emptySlot
-          } else {
-            // utilitzo available lesson per no tindre que declarar-n'hi una altra.
-            this.availableLesson = emptySlot
-          }
+          this.currentLesson = emptySlot
           return false
         }
       },
