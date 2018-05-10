@@ -302,7 +302,7 @@
         }
       },
       addLessonAvailable () {
-        if (this.currentLesson !== undefined) {
+        if (this.currentLesson !== '') {
           this.availableLessons.push(this.currentLesson)
           this.setDefaultValuesToTimeslot()
         }
